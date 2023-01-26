@@ -280,3 +280,4 @@ django_chat/media/
 .env
 .envs/*
 !.envs/.local/
+.envvars

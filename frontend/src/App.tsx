@@ -1,26 +1,55 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { ActiveConversations } from "./components/ActiveConversations";
+import { Chat } from "./components/Chat";
+import { Conversations } from "./components/Conversations";
+import { Login } from "./components/Login";
+import { Navbar } from "./components/NavBar";
+import { ProtectedRoute } from "./components/ProtectedRoute";
+import { AuthContextProvider } from "./contexts/AuthContext";
+import { NotificationContextProvider } from "./contexts/NotificationContext";
 
-function App() {
+export default function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
+    <BrowserRouter>
+      <Routes>
+        <Route
+          path="/"
+          element={
+            <AuthContextProvider>
+              <NotificationContextProvider>
+                <Navbar />
+              </NotificationContextProvider>
+            </AuthContextProvider>
+          }
         >
-          Learn React
-        </a>
-      </header>
-    </div>
+          <Route
+            path=""
+            element={
+              <ProtectedRoute>
+                <Conversations />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="conversations/"
+            element={
+              <ProtectedRoute>
+                <ActiveConversations />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="chats/:conversationName"
+            element={
+              <ProtectedRoute>
+                <Chat />
+              </ProtectedRoute>
+            }
+          />
+          <Route path="login" element={<Login />} />
+        </Route>
+      </Routes>
+    </BrowserRouter>
   );
 }
-
-export default App;

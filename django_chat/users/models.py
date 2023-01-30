@@ -1,25 +1,8 @@
+from typing import Iterable, Optional
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
-
-
-PATIENT_ILLNESS = (
-    ("Asthma", "Asthma"),
-    ("Cancer", "Cancer"),
-    ("Diabetes", "Diabetes"),
-    ("Heart Disease", "Heart Disease"),
-    ("Hypertension", "Hypertension"),
-)
-
-DOCTOR_SPECIALIZATION = (
-    ("Cardiologist", "Cardiologist"),
-    ("Dentist", "Dentist"),
-    ("Dermatologist", "Dermatologist"),
-    ("Endocrinologist", "Endocrinologist"),
-    ("Gastroenterologist", "Gastroenterologist"),
-    ("Neurologist", "Neurologist"),
-)
 
 
 class User(AbstractUser):
@@ -31,8 +14,8 @@ class User(AbstractUser):
 
     #: First and last name do not cover name patterns around the globe
     name = models.CharField(_("Name of User"), blank=True, max_length=255)
-    first_name = None  # type: ignore
-    last_name = None  # type: ignore
+    first_name = models.CharField(_("First Name"), blank=True, max_length=255)
+    last_name = models.CharField(_("Last Name"), blank=True, max_length=255)
 
     def get_absolute_url(self):
         """Get url for user's detail view.
@@ -49,9 +32,15 @@ class Patient(models.Model):
     Patient model for django chat.
     """
 
+    PATIENT_ILLNESS = (
+        ("Asthma", "Asthma"),
+        ("Cancer", "Cancer"),
+        ("Diabetes", "Diabetes"),
+        ("Heart Disease", "Heart Disease"),
+        ("Hypertension", "Hypertension"),
+    )
+
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="patient")
-    first_name = None  # type: ignore
-    last_name = None  # type: ignore
     illness = models.CharField(
         _("Illness"), blank=True, max_length=255, choices=PATIENT_ILLNESS
     )
@@ -71,9 +60,16 @@ class Doctor(models.Model):
     Doctor model for django chat.
     """
 
+    DOCTOR_SPECIALIZATION = (
+        ("Cardiologist", "Cardiologist"),
+        ("Dentist", "Dentist"),
+        ("Dermatologist", "Dermatologist"),
+        ("Endocrinologist", "Endocrinologist"),
+        ("Gastroenterologist", "Gastroenterologist"),
+        ("Neurologist", "Neurologist"),
+    )
+
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="doctor")
-    first_name = None  # type: ignore
-    last_name = None  # type: ignore
     specialization = models.CharField(
         _("Specialization"), blank=True, max_length=255, choices=DOCTOR_SPECIALIZATION
     )

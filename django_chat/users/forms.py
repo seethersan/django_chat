@@ -3,6 +3,10 @@ from allauth.socialaccount.forms import SignupForm as SocialSignupForm
 from django.contrib.auth import forms as admin_forms
 from django.contrib.auth import get_user_model
 from django.utils.translation import gettext_lazy as _
+from django import forms
+
+
+from .models import Patient, Doctor
 
 User = get_user_model()
 
@@ -32,6 +36,24 @@ class UserSignupForm(SignupForm):
     Default fields will be added automatically.
     Check UserSocialSignupForm for accounts created from social.
     """
+
+    first_name = forms.CharField(max_length=30, label="First Name")
+    last_name = forms.CharField(max_length=30, label="Last Name")
+    account_type = forms.ChoiceField(
+        choices=[("patient", "Patient"), ("doctor", "Doctor")], label="Account Type"
+    )
+
+    def save(self, request):
+        user = super(UserSignupForm, self).save(request)
+        user.first_name = self.cleaned_data["first_name"]
+        user.last_name = self.cleaned_data["last_name"]
+        user.save()
+
+        if self.cleaned_data["account_type"] == "patient":
+            user.patient = Patient.objects.create(user=user)
+        elif self.cleaned_data["account_type"] == "doctor":
+            user.doctor = Doctor.objects.create(user=user)
+        return user
 
 
 class UserSocialSignupForm(SocialSignupForm):

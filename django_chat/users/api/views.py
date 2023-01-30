@@ -1,5 +1,5 @@
 from django.contrib.auth import get_user_model
-from rest_framework import status
+from rest_framework import status, viewsets, filters
 from rest_framework.decorators import action
 from rest_framework.mixins import ListModelMixin, RetrieveModelMixin, UpdateModelMixin
 from rest_framework.response import Response
@@ -8,7 +8,8 @@ from rest_framework.authtoken.models import Token
 from rest_framework.authtoken.views import ObtainAuthToken
 
 
-from .serializers import UserSerializer
+from .serializers import UserSerializer, DoctorSerializer, PatientSerializer
+from ..models import Doctor, Patient
 
 User = get_user_model()
 
@@ -42,3 +43,24 @@ class CustomObtainAuthTokenView(ObtainAuthToken):
         user = serializer.validated_data["user"]
         token, created = Token.objects.get_or_create(user=user)
         return Response({"token": token.key, "username": user.username})
+
+
+class DoctorViewSet(viewsets.ModelViewSet):
+    """
+    List all doctors, or create a new doctor.
+    """
+
+    queryset = Doctor.objects.all()
+    serializer_class = DoctorSerializer
+    ordering_fields = ["name"]
+
+
+class PatientViewSet(viewsets.ModelViewSet):
+    """
+    List all patient, or create a new patient.
+    """
+
+    queryset = Patient.objects.all()
+    serializer_class = PatientSerializer
+    filter_backends = [filters.OrderingFilter]
+    ordering_fields = ["name"]

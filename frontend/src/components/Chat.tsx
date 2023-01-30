@@ -198,14 +198,15 @@ export function Chat() {
 
   return (
     <div>
-      <span>The WebSocket is currently {connectionStatus}</span>
       {conversation && (
         <div className="py-6">
           <h3 className="text-3xl font-semibold text-gray-900">
-            Chat with user: {conversation.other_user.username}
+            Chat with {conversation.other_user.type}: {conversation.other_user.username}
+          </h3>
+          <h3 className="text-sm">
+            {conversation.other_user.type === "doctor" ? "Specialty: ".concat(conversation.other_user.specialty) : "ILLNESS:".concat(conversation.other_user.illness) }
           </h3>
           <span className="text-sm">
-            {conversation.other_user.username} is currently
             {participants.includes(conversation.other_user.username)
               ? " online"
               : " offline"}

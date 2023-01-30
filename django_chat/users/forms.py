@@ -37,22 +37,38 @@ class UserSignupForm(SignupForm):
     Check UserSocialSignupForm for accounts created from social.
     """
 
-    first_name = forms.CharField(max_length=30, label="First Name")
-    last_name = forms.CharField(max_length=30, label="Last Name")
-    account_type = forms.ChoiceField(
-        choices=[("patient", "Patient"), ("doctor", "Doctor")], label="Account Type"
-    )
+    def __init__(self, *args, **kwargs):
+        super(UserSignupForm, self).__init__(*args, **kwargs)
+        self.fields["first_name"] = forms.CharField(max_length=30, label="First Name")
+        self.fields["last_name"] = forms.CharField(max_length=30, label="Last Name")
+        self.fields["account_type"] = forms.ChoiceField(
+            choices=[("patient", "Patient"), ("doctor", "Doctor")], label="Account Type"
+        )
+        self.fields["illness"] = forms.ChoiceField(
+            choices=Patient.PATIENT_ILLNESS, label="Illness"
+        )
+        self.fields["specialization"] = forms.ChoiceField(
+            choices=Doctor.DOCTOR_SPECIALIZATION, label="Specialization"
+        )
 
     def save(self, request):
+        account_type = self.cleaned_data.pop("account_type")
+        illness = self.cleaned_data.pop("illness")
+        specialization = self.cleaned_data.pop("specialization")
         user = super(UserSignupForm, self).save(request)
-        user.first_name = self.cleaned_data["first_name"]
-        user.last_name = self.cleaned_data["last_name"]
-        user.save()
 
-        if self.cleaned_data["account_type"] == "patient":
-            user.patient = Patient.objects.create(user=user)
-        elif self.cleaned_data["account_type"] == "doctor":
-            user.doctor = Doctor.objects.create(user=user)
+        if account_type == "patient":
+            patient = Patient.objects.create(
+                user=user,
+                illness=illness,
+            )
+            patient.save()
+        elif account_type == "doctor":
+            doctor = Doctor.objects.create(
+                user=user,
+                specialization=specialization,
+            )
+            doctor.save()
         return user
 
 

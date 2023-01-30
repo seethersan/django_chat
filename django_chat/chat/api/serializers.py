@@ -1,8 +1,13 @@
+import json
+from django_chat.users.models import Doctor, Patient
 from rest_framework import serializers
-
-from django_chat.chat.models import Message, Conversation
-from django_chat.users.api.serializers import UserSerializer
 from django.contrib.auth import get_user_model
+from django_chat.chat.models import Message, Conversation
+from django_chat.users.api.serializers import (
+    DoctorSerializer,
+    PatientSerializer,
+    UserSerializer,
+)
 
 
 User = get_user_model()
@@ -57,4 +62,32 @@ class ConversationSerializer(serializers.ModelSerializer):
             if username != self.context["user"].username:
                 # This is the other participant
                 other_user = User.objects.get(username=username)
-                return UserSerializer(other_user, context=context)
+                try:
+                    doctor = Doctor.objects.get(user=other_user)
+                except Doctor.DoesNotExist:
+                    doctor = None
+                else:
+                    doctor = DoctorSerializer(doctor, context=context).data
+                    return {
+                        "specialization": doctor["specialization"],
+                        "username": doctor["user"]["username"],
+                        "name": doctor["user"]["name"],
+                        "password": doctor["user"]["password"],
+                        "type": "doctor",
+                    }
+
+                try:
+                    patient = Patient.objects.get(user=other_user)
+                except Patient.DoesNotExist:
+                    patient = None
+                else:
+                    patient = PatientSerializer(patient, context=context).data
+                    return {
+                        "illness": patient["illness"],
+                        "username": patient["user"]["username"],
+                        "name": patient["user"]["name"],
+                        "password": patient["user"]["password"],
+                        "type": "patient",
+                    }
+
+                return UserSerializer(other_user, context=context).data

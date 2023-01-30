@@ -34,13 +34,16 @@ Running the following command:
 Connect to the django_chat_local_django
 
 Export DATABASE URL
-$ export DATABASE_URL="postgres://ASyaeeLtZMdFPOAglHFjgPMvlPhSdwTK:qGAAW9nGnvA4wfb9TZWioLbQ6SY5MFk0p7dUN6OUSgShdTn7jlhdv8dTbEnvN12i@postgres:5432/django_chat"
+
+    $ export DATABASE_URL="postgres://ASyaeeLtZMdFPOAglHFjgPMvlPhSdwTK:qGAAW9nGnvA4wfb9TZWioLbQ6SY5MFk0p7dUN6OUSgShdTn7jlhdv8dTbEnvN12i@postgres:5432/django_chat"
 
 Set CELERY_BROKER_URL
-$ export CELERY_BROKER_URL="redis://redis:6379/0"
+
+    $ export CELERY_BROKER_URL="redis://redis:6379/0"
 
 Then you can create super user
-$ python manage.py createsuperuser
+
+    $ python manage.py createsuperuser
 
 ### Create patients and doctors
 

@@ -8,7 +8,11 @@ from rest_framework.authtoken.models import Token
 from rest_framework.authtoken.views import ObtainAuthToken
 
 
-from .serializers import UserSerializer, DoctorSerializer, PatientSerializer
+from .serializers import (
+    UserSerializer,
+    DoctorSerializer,
+    PatientSerializer,
+)
 from ..models import Doctor, Patient
 
 User = get_user_model()
@@ -34,6 +38,35 @@ class UserViewSet(RetrieveModelMixin, ListModelMixin, UpdateModelMixin, GenericV
             User.objects.all(), many=True, context={"request": request}
         )
         return Response(status=status.HTTP_200_OK, data=serializer.data)
+
+    @action(detail=False)
+    def doctor_patient(self, request):
+        try:
+            patient = Patient.objects.get(user=request.user)
+        except Patient.DoesNotExist:
+            patient = None
+        if patient:
+            doctors = Doctor.objects.filter(patients=patient)
+            serializer = DoctorSerializer(
+                doctors, many=True, context={"request": request}
+            )
+        try:
+            doctor = Doctor.objects.get(user=request.user)
+        except Doctor.DoesNotExist:
+            doctor = None
+        if doctor:
+            patients = Patient.objects.filter(doctor=doctor)
+            serializer = PatientSerializer(
+                patients, many=True, context={"request": request}
+            )
+
+        return Response(
+            status=status.HTTP_200_OK,
+            data=[
+                {"username": data["user"]["username"], "name": data["user"]["name"]}
+                for data in serializer.data
+            ],
+        )
 
 
 class CustomObtainAuthTokenView(ObtainAuthToken):

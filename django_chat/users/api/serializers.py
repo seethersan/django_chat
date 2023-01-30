@@ -9,24 +9,41 @@ User = get_user_model()
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ["username", "name"]
+        fields = ["username", "name", "password"]
 
 
 class DoctorSerializer(serializers.ModelSerializer):
+    user = UserSerializer()
     patients = serializers.PrimaryKeyRelatedField(
         queryset=Patient.objects.filter(), many=True
     )
 
     class Meta:
-        model = Patient
-        fields = ["username", "name", "first_name", "last_name", "specialization"]
-        extra_kwargs = {"patients": {"required": False}}
+        model = Doctor
+        fields = [
+            "user",
+            "specialization",
+            "patients",
+        ]
+
+    def create(self, validated_data):
+        data = validated_data.pop("user")
+        user = User.objects.create_user(**data)
+        validated_data.update({"user": user})
+        return super().create(validated_data)
 
 
 class PatientSerializer(serializers.ModelSerializer):
-    doctor = DoctorSerializer(read_only=True, many=True)
+    user = UserSerializer()
+    doctors = DoctorSerializer(read_only=True, many=True)
 
     class Meta:
         model = Patient
-        fields = ["username", "name", "first_name", "last_name", "illness"]
-        extra_kwargs = {"doctors": {"required": False}}
+        fields = ["user", "illness", "doctors"]
+        extra_kwargs = {"password": {"write_only": True}}
+
+    def create(self, validated_data):
+        data = validated_data.pop("user")
+        user = User.objects.create_user(**data)
+        validated_data.update({"user": user})
+        return super().create(validated_data)

@@ -29,6 +29,25 @@ Running the following command:
 
     $ docker-compose -f local.yml up -d
 
+### Create superuser
+
+Connect to the django_chat_local_django
+
+Export DATABASE URL
+$ export DATABASE_URL="postgres://ASyaeeLtZMdFPOAglHFjgPMvlPhSdwTK:qGAAW9nGnvA4wfb9TZWioLbQ6SY5MFk0p7dUN6OUSgShdTn7jlhdv8dTbEnvN12i@postgres:5432/django_chat"
+
+Set CELERY_BROKER_URL
+$ export CELERY_BROKER_URL="redis://redis:6379/0"
+
+Then you can create super user
+$ python manage.py createsuperuser
+
+### Create patients and doctors
+
+Now this chat connect doctors and patients assigned to them. So in Chat link patients can only see online the doctors that are treating them and viceversa.
+
+Using this URL http://127.0.0.1:8000/accounts/signup/ you now can register both patients and doctors, and you can assign patients to doctors using DJANGO Admin.
+
 ### Run frontend
 
 Running the following commands:

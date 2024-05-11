@@ -73,7 +73,7 @@ AUTHENTICATION_BACKENDS = [
 ]
 
 LOGIN_REDIRECT_URL = "index"
-ACCOUNT_LOGOUT_REDIRECT = "index"
+ACCOUNT_LOGOUT_REDIRECT_URL = "index"
 ACCOUNT_EMAIL_REQUIRED = True
 SITE_ID = 1
 
@@ -125,6 +125,16 @@ DATABASES = {
         "PORT": os.environ.get("SQL_PORT", "5432"),
     }
 }
+
+if os.environ.get("EMAIL_ENABLED", False):
+    EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+    EMAIL_HOST = os.environ.get("EMAIL_HOST")
+    EMAIL_PORT = os.environ.get("EMAIL_PORT")
+    EMAIL_USE_TLS = os.environ.get("EMAIL_USE_TLS") == '1'
+    EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER")
+    EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD")
+else:
+    EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 
 
 # Password validation

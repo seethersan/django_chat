@@ -1,4 +1,3 @@
-
 @import url('https://fonts.googleapis.com/css2?family=Work+Sans:wght@200&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
 
@@ -92,5 +91,23 @@ body {
 .leaveButton:hover {
 	background-color: #aa0404;
 	color: #ffffff;
+	transition: 0.3s;
+}
+
+.nav {
+	width: 95vw;
+	text-align: right;
+}
+
+.sign-out {
+	font-family: Verdana, Geneva, Tahoma, sans-serif;
+	text-decoration: none;
+	color: #333;
+	transition: 0.3s;
+}
+
+.sign-out:hover {
+	cursor: pointer;
+	color: #1d5a97;
 	transition: 0.3s;
 }

@@ -1,0 +1,46 @@
+services:
+  web:
+    build: .
+    command: python manage.py runserver 0.0.0.0:8000
+    ports:
+      - 8000:8000
+    environment:
+      DEBUG: 1
+      SECRET_KEY: w1w&r-^4jf6!q7x(c!9s)qwvlq!%*%wf4*b8%fn#vu@oux759*
+      DJANGO_ALLOWED_HOSTS: localhost 127.0.0.1 [::1]
+      SQL_ENGINE: django.db.backends.postgresql
+      SQL_DATABASE: django_chat_db
+      SQL_USER: admin
+      SQL_PASSWORD: password
+      SQL_HOST: db
+      SQL_PORT: 5432
+      REDIS_HOST: "redis"
+      REDIS_PASSWORD: "test"
+    depends_on:
+      - db
+      - redis
+
+  db:
+    image: postgres:16
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: django_chat_db
+
+  redis:
+    image: redis:7.2-alpine
+    ports:
+      - "6379:6379"
+    expose:
+      - "6379"
+    command:
+      - /bin/sh
+      - -c
+      - redis-server --requirepass "$${REDIS_PASSWORD:?REDIS_PASSWORD variable is not set}"
+    environment:
+      REDIS_PASSWORD: test
+
+volumes:
+  postgres_data:

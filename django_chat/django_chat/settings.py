@@ -71,6 +71,7 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = "django_chat.wsgi.application"
+ASGI_APPLICATION = "django_chat.asgi.application"
 
 
 # Database

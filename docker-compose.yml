@@ -17,12 +17,8 @@ services:
       REDIS_HOST: "redis"
       REDIS_PORT: 6379
       REDIS_PASSWORD: "test"
-      # EMAIL_BACKEND: 'django.core.mail.backends.smtp.EmailBackend'
-      # EMAIL_HOST: 'smtp.gmail.com'
-      # EMAIL_USE_TLS: True
-      # EMAIL_PORT: 587
-      # EMAIL_HOST_USER: #sender's email-id
-      # EMAIL_HOST_PASSWORD: #password associated with above email-id
+      ACS_CONNECTION_STRING: # Add your Azure Communication Services connection string here
+      ACS_SENDER_EMAIL: # Add your Azure Communication Services sender email here
     depends_on:
       - db
       - redis

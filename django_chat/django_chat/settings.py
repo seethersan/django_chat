@@ -126,17 +126,6 @@ DATABASES = {
     }
 }
 
-if os.environ.get("EMAIL_ENABLED", False):
-    EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
-    EMAIL_HOST = os.environ.get("EMAIL_HOST")
-    EMAIL_PORT = os.environ.get("EMAIL_PORT")
-    EMAIL_USE_TLS = os.environ.get("EMAIL_USE_TLS") == '1'
-    EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER")
-    EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD")
-else:
-    EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
-
-
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
 
@@ -183,3 +172,9 @@ STATICFILES_DIRS = [
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
+
+EMAIL_BACKEND = "django_acs_email.ACSEmailBackend"
+
+# ACS Email
+ACS_CONNECTION_STRING = os.environ.get("ACS_CONNECTION_STRING", "")
+ACS_SENDER_EMAIL = os.environ.get("ACS_SENDER_EMAIL", "")

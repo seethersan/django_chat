@@ -20,8 +20,15 @@ const chatSocket = new WebSocket(
 chatSocket.onmessage = function(e) {
     const data = JSON.parse(e.data);
     const messageElement = document.createElement('div')
+    const userId = data['user_id']
+    const loggedInUserId = JSON.parse(document.getElementById('user-id').textContent)
     messageElement.innerText = data.message
-    messageElement.className = 'message'
+    if (userId === loggedInUserId) {
+        messageElement.classList.add('message', 'sender')
+    } else {
+        messageElement.classList.add('message', 'receiver')
+    }
+
     chatLog.appendChild(messageElement)
 
     if (document.querySelector('#emptyText')) {

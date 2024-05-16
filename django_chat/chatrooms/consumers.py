@@ -1,5 +1,10 @@
 import json
+from django.core.cache import cache
 from channels.generic.websocket import AsyncWebsocketConsumer
+from channels.db import database_sync_to_async
+
+from .models import ChatRoom
+from django_chat.chat_storage import AsyncChatStorage
 
 class ChatConsumer(AsyncWebsocketConsumer):
 	async def connect(self):
@@ -23,6 +28,17 @@ class ChatConsumer(AsyncWebsocketConsumer):
 		text_data_json = json.loads(text_data)
 		message = text_data_json['message']
 		self.user_id = self.scope['user'].id
+		
+		storage = AsyncChatStorage()
+		
+		room = await database_sync_to_async(ChatRoom.objects.get)(name=self.room_name)
+		chats = await storage.get_chat(room.name, [])
+		chats.append({
+			'user': self.user_id, 
+			'content': message,
+			'room': room.name
+		})
+		await storage.set_chat(room.name, chats)
 
 		await self.channel_layer.group_send(
 			self.room_group_name,

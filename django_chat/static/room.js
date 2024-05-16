@@ -21,7 +21,7 @@ chatSocket.onmessage = function(e) {
     const data = JSON.parse(e.data);
     const messageElement = document.createElement('div')
     const userId = data['user_id']
-    const loggedInUserId = JSON.parse(document.getElementById('user-id').textContent)
+    const loggedInUserId = JSON.parse(document.getElementById('user_id').textContent)
     messageElement.innerText = data.message
     if (userId === loggedInUserId) {
         messageElement.classList.add('message', 'sender')

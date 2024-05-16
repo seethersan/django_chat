@@ -11,7 +11,7 @@ class Index(LoginRequiredMixin, View):
 
 class Room(LoginRequiredMixin, View):
 	def get(self, request, room_name):
-		room = ChatRoom.objects.get(name=room_name)
+		room = ChatRoom.objects.filter(name=room_name).first()
 		chats = []
 
 		storage = ChatStorage()

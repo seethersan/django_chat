@@ -180,3 +180,26 @@ EMAIL_BACKEND = "django_acs_email.ACSEmailBackend"
 # ACS Email
 ACS_CONNECTION_STRING = os.environ.get("ACS_CONNECTION_STRING", "")
 ACS_SENDER_EMAIL = os.environ.get("ACS_SENDER_EMAIL", "")
+
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "formatters": {
+        "simple": {
+            "format": "[%(asctime)s] %(levelname)s | %(funcName)s | %(name)s | %(message)s",
+            "datefmt": "%Y-%m-%d %H:%M:%S",
+        },
+    },
+    "handlers": {
+        "logger": {
+            "level": "DEBUG",
+            "class": "logging.handlers.RotatingFileHandler",
+            "filename": BASE_DIR / "logs/django_chat.log",
+            "formatter": "simple",
+        }
+    },
+    "root": {
+        "handlers": ["logger"],
+        "level": "INFO",
+    },
+}

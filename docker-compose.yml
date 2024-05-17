@@ -1,4 +1,35 @@
 services:
+  elasticsearch:
+      image: docker.elastic.co/elasticsearch/elasticsearch:7.8.0
+      container_name: elasticsearch
+      ports:
+        - 9200:9200
+        - 9300:9300
+      environment:
+        discovery.type: single-node
+
+  kibana:
+      image: docker.elastic.co/kibana/kibana:7.8.0
+      ports:
+        - 5601:5601
+      links:
+        - elasticsearch
+      depends_on:
+        - elasticsearch
+
+  filebeat:
+      image: docker.elastic.co/beats/filebeat:7.8.0
+      volumes:
+        - ./filebeat.yml:/usr/share/filebeat/filebeat.yml:ro
+        - web_log_data:/usr/share/filebeat/logs
+      environment:
+        ELASTICSEARCH_URL: http://elasticsearch:9200
+      links:
+        - kibana
+        - elasticsearch
+      depends_on:
+        - elasticsearch
+
   web:
     build: .
     command: python manage.py runserver 0.0.0.0:8000
@@ -19,6 +50,8 @@ services:
       REDIS_PASSWORD: "test"
       ACS_CONNECTION_STRING: # Add your Azure Communication Services connection string here
       ACS_SENDER_EMAIL: # Add your Azure Communication Services sender email here
+    volumes:
+      - web_log_data:/usr/src/app/logs
     depends_on:
       - db
       - redis
@@ -49,3 +82,4 @@ services:
 
 volumes:
   postgres_data:
+  web_log_data:

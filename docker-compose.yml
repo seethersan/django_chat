@@ -30,6 +30,30 @@ services:
       depends_on:
         - elasticsearch
 
+  prometheus:
+    image: prom/prometheus
+    restart: 'yes'
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus_data:/prometheus
+    ports:
+      - 9090:9090
+    network_mode: host
+  
+  grafana:
+    image: grafana/grafana
+    environment:
+      GF_INSTALL_PLUGINS: "grafana-clock-panel,grafana-simple-json-datasource"
+    restart: 'no'
+    volumes:
+      - grafana_data:/var/lib/grafana
+    ports:
+      - 3000:3000
+    depends_on:
+      - prometheus
+    network_mode: host
+    
+
   web:
     build: .
     command: python manage.py runserver 0.0.0.0:8000
@@ -83,3 +107,5 @@ services:
 volumes:
   postgres_data:
   web_log_data:
+  prometheus_data:
+  grafana_data:

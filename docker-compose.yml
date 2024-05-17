@@ -52,11 +52,9 @@ services:
     depends_on:
       - prometheus
     network_mode: host
-    
 
   web:
     build: .
-    command: python manage.py runserver 0.0.0.0:8000
     ports:
       - 8000:8000
     environment:
@@ -76,9 +74,19 @@ services:
       ACS_SENDER_EMAIL: # Add your Azure Communication Services sender email here
     volumes:
       - web_log_data:/usr/src/app/logs
+      - static_volume:/home/app/web/staticfiles
     depends_on:
       - db
       - redis
+
+  nginx:
+    build: ./nginx
+    ports:
+      - 1337:80
+    volumes:
+      - static_volume:/home/app/web/staticfiles
+    depends_on:
+      - web
 
   db:
     image: postgres:16
@@ -109,3 +117,4 @@ volumes:
   web_log_data:
   prometheus_data:
   grafana_data:
+  static_volume:

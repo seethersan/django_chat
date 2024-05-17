@@ -139,3 +139,6 @@ GitHub.sublime-settings
 
 docker-compose-local.yml
 .DS_Store
+secrets.yaml
+ingress.yaml
+staticfiles

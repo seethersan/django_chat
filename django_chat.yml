@@ -41,6 +41,11 @@ spec:
                 secretKeyRef:
                   name: django-chat-secrets
                   key: DJANGO_ALLOWED_HOSTS
+            - name: CSFR_TRUSTED_ORIGINS
+              valueFrom:
+                secretKeyRef:
+                  name: django-chat-secrets
+                  key: CSFR_TRUSTED_ORIGINS
             - name: SQL_ENGINE
               valueFrom:
                 secretKeyRef:

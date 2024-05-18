@@ -62,6 +62,7 @@ services:
       DEBUG: 1
       SECRET_KEY: w1w&r-^4jf6!q7x(c!9s)qwvlq!%*%wf4*b8%fn#vu@oux759*
       DJANGO_ALLOWED_HOSTS: localhost 127.0.0.1 [::1]
+      CSFR_TRUSTED_ORIGINS: http://localhost:1337
       SQL_ENGINE: django.db.backends.postgresql
       SQL_DATABASE: django_chat_db
       SQL_USER: admin

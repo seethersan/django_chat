@@ -28,6 +28,8 @@ DEBUG = bool(os.environ.get("DEBUG", default=0))
 
 ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS", "*").split(" ")
 
+CSFR_TRUSTED_ORIGINS = os.environ.get("CSFR_TRUSTED_ORIGINS", "").split(" ")
+
 
 # Application definition
 

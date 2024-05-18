@@ -30,6 +30,10 @@ ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS", "*").split(" ")
 
 CSFR_TRUSTED_ORIGINS = os.environ.get("CSFR_TRUSTED_ORIGINS", "").split(" ")
 
+USE_X_FORWARDED_HOST = True
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+SESSION_COOKIE_SECURE = True
+
 
 # Application definition
 

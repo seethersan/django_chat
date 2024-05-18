@@ -1,0 +1,119 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: django-chat
+  labels:
+    app: django-chat
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: django-chat
+  template:
+    metadata:
+      labels:
+        name: django-chat
+    spec:
+      volumes:
+        - name: staticfiles
+          persistentVolumeClaim:
+            claimName: api-static-volume-claim
+        - name: logs
+          persistentVolumeClaim:
+            claimName: api-logs-volume-claim
+      containers:
+        - name: django-chat
+          image: "tokhna/django_chat:${RELEASE_VERSION}"
+          command:
+            - "/bin/sh"
+            - "/usr/src/app/entrypoint.sh"
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8000
+          volumeMounts:
+            - mountPath: "/usr/src/app/staticfiles"
+              name: staticfiles
+            - mountPath: "/usr/src/app/logs"
+              name: logs
+          env:
+            - name: SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: django-chat-secrets
+                  key: SECRET_KEY
+            - name: DJANGO_ALLOWED_HOSTS
+              valueFrom:
+                secretKeyRef:
+                  name: django-chat-secrets
+                  key: DJANGO_ALLOWED_HOSTS
+            - name: SQL_ENGINE
+              valueFrom:
+                secretKeyRef:
+                  name: django-chat-secrets
+                  key: SQL_ENGINE
+            - name: SQL_DATABASE
+              valueFrom:
+                secretKeyRef:
+                  name: django-chat-secrets
+                  key: SQL_DATABASE
+            - name: SQL_USER
+              valueFrom:
+                secretKeyRef:
+                  name: django-chat-secrets
+                  key: SQL_USER
+            - name: SQL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: django-chat-secrets
+                  key: SQL_PASSWORD
+            - name: SQL_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: django-chat-secrets
+                  key: SQL_HOST
+            - name: SQL_PORT
+              valueFrom:
+                secretKeyRef:
+                  name: django-chat-secrets
+                  key: SQL_PORT
+            - name: REDIS_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: django-chat-secrets
+                  key: REDIS_HOST
+            - name: REDIS_PORT
+              valueFrom:
+                secretKeyRef:
+                  name: django-chat-secrets
+                  key: REDIS_PORT
+            - name: REDIS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: django-chat-secrets
+                  key: REDIS_PASSWORD
+            - name: ACS_CONNECTION_STRING
+              valueFrom:
+                secretKeyRef:
+                  name: django-chat-secrets
+                  key: ACS_CONNECTION_STRING
+            - name: ACS_SENDER_EMAIL
+              valueFrom:
+                secretKeyRef:
+                  name: django-chat-secrets
+                  key: ACS_SENDER_EMAIL
+---
+# START Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: django-chat
+  labels:
+    app: django-chat
+spec:
+  type: LoadBalancer
+  ports:
+    - port: 80 #port that the service exposes
+      targetPort: 8000 #port that the app is receiving requests from via the pod
+  selector:
+    name: django-chat
+# END SERVICE

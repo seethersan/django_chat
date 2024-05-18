@@ -72,6 +72,10 @@ services:
       REDIS_PASSWORD: "test"
       ACS_CONNECTION_STRING: # Add your Azure Communication Services connection string here
       ACS_SENDER_EMAIL: # Add your Azure Communication Services sender email here
+      USE_S3: "False"
+      AWS_ACCESS_KEY_ID: # Add your AWS access key ID here
+      AWS_SECRET_ACCESS_KEY: # Add your AWS secret access key here
+      AWS_STORAGE_BUCKET_NAME: # Add your AWS storage bucket name here
     volumes:
       - web_log_data:/usr/src/app/logs
       - static_volume:/home/app/web/staticfiles

@@ -32,7 +32,7 @@ services:
 
   prometheus:
     image: prom/prometheus
-    restart: 'yes'
+    restart: 'no'
     volumes:
       - ./prometheus.yml:/etc/prometheus/prometheus.yml
       - prometheus_data:/prometheus
@@ -55,6 +55,7 @@ services:
 
   web:
     build: .
+    image: django_chat
     ports:
       - 8000:8000
     environment:

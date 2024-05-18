@@ -61,9 +61,9 @@ jobs:
         env:
           RELEASE_VERSION: ${{ env.RELEASE_VERSION }}
         with:
-          input: django_chat.yaml
-          output: deploy.yaml
+          input: django_chat.yml
+          output: deploy.yml
 
       - name: Deploy app
         run: |
-          kubectl -n chat apply -f deploy.yaml
+          kubectl -n chat apply -f deploy.yml

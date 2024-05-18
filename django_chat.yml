@@ -23,7 +23,7 @@ spec:
           image: "tokhna/django_chat:${RELEASE_VERSION}"
           command:
             - "/bin/sh"
-            - "/usr/src/app/entrypoint.sh"
+            - "/home/app/web/entrypoint.sh"
           imagePullPolicy: Always
           ports:
             - containerPort: 8000

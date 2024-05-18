@@ -8,9 +8,11 @@ if (!chatLog.hasChildNodes()) {
     emptyText.className = 'emptyText'
     chatLog.appendChild(emptyText)
 }
+const ws_scheme = window.location.protocol == 'https:' ? 'wss' : 'ws';
 
 const chatSocket = new WebSocket(
-    'ws://'
+    ws_scheme
+    + '://'
     + window.location.host
     + '/ws/chat/'
     + roomName

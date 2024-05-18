@@ -15,9 +15,6 @@ spec:
         name: django-chat
     spec:
       volumes:
-        - name: staticfiles
-          persistentVolumeClaim:
-            claimName: api-static-volume-claim
         - name: logs
           persistentVolumeClaim:
             claimName: api-logs-volume-claim
@@ -31,8 +28,6 @@ spec:
           ports:
             - containerPort: 8000
           volumeMounts:
-            - mountPath: "/usr/src/app/staticfiles"
-              name: staticfiles
             - mountPath: "/usr/src/app/logs"
               name: logs
           env:

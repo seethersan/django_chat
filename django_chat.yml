@@ -8,11 +8,11 @@ spec:
   replicas: 1
   selector:
     matchLabels:
-      name: django-chat
+      name: django-chat-api
   template:
     metadata:
       labels:
-        name: django-chat
+        name: django-chat-api
     spec:
       containers:
         - name: django-chat-api
@@ -46,16 +46,16 @@ spec:
   replicas: 1
   selector:
     matchLabels:
-      name: django-chat
+      name: django-chat-websockets
   template:
     metadata:
       labels:
-        name: django-chat
+        name: django-chat-websockets
     spec:
       containers:
         - name: django-chat-websockets
           image: "tokhna/django_chat:${RELEASE_VERSION}"
-          args:
+          command:
             - "gunicorn"
             - "-b"
             - "0.0.0.0:8000"
@@ -84,9 +84,8 @@ metadata:
   labels:
     app: django-chat
 spec:
-  type: LoadBalancer
   ports:
-    - port: 8080 #port that the service exposes
+    - port: 8000 #port that the service exposes
       targetPort: 8000 #port that the app is receiving requests from via the pod
   selector:
     name: django-chat-api
@@ -100,9 +99,8 @@ metadata:
   labels:
     app: django-chat
 spec:
-  type: LoadBalancer
   ports:
-    - port: 8081 #port that the service exposes
+    - port: 8000 #port that the service exposes
       targetPort: 8000 #port that the app is receiving requests from via the pod
   selector:
     name: django-chat-websockets

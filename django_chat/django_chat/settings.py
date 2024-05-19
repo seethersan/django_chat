@@ -43,7 +43,6 @@ INSTALLED_APPS = [
     "allauth.socialaccount",
     "crispy_forms",
     "crispy_bootstrap4",
-    "daphne",
     "channels",
     "channels_redis",
     "django.contrib.admin",
@@ -207,11 +206,14 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 CRISPY_TEMPLATE_PACK = "bootstrap4"
 
-EMAIL_BACKEND = "django_acs_email.ACSEmailBackend"
-
 # ACS Email
 ACS_CONNECTION_STRING = os.environ.get("ACS_CONNECTION_STRING", "")
 ACS_SENDER_EMAIL = os.environ.get("ACS_SENDER_EMAIL", "")
+
+if ACS_CONNECTION_STRING and ACS_SENDER_EMAIL:
+    EMAIL_BACKEND = "django_acs_email.ACSEmailBackend"
+else:
+    EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 
 LOGGING = {
     "version": 1,

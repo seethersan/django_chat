@@ -53,12 +53,12 @@ services:
       - prometheus
     network_mode: host
 
-  web: &web
+  web:
     build: .
-    command: ["gunicorn", "-b", "0.0.0.0:8000", "django_chat.wsgi:application"]
+    command: ["python", "manage.py", "runserver", "0.0.0.0:8000"]
     image: django_chat
     ports:
-      - 8001:8000
+      - 8000:8000
     environment:
       DEBUG: 1
       SECRET_KEY: w1w&r-^4jf6!q7x(c!9s)qwvlq!%*%wf4*b8%fn#vu@oux759*
@@ -81,38 +81,6 @@ services:
       AWS_STORAGE_BUCKET_NAME: # Add your AWS storage bucket name here
     volumes:
       - web_log_data:/usr/src/app/logs
-      - static_volume:/home/app/web/staticfiles
-    depends_on:
-      - db
-      - redis
-
-  websockets:
-    <<: *web
-    command: ["gunicorn", "-b", "0.0.0.0:8000", "django_chat.asgi:application", "-k", "uvicorn.workers.UvicornWorker"]
-    ports:
-      - 8002:8000
-    environment:
-      DEBUG: 1
-      SECRET_KEY: w1w&r-^4jf6!q7x(c!9s)qwvlq!%*%wf4*b8%fn#vu@oux759*
-      DJANGO_ALLOWED_HOSTS: localhost 127.0.0.1 [::1]
-      CSFR_TRUSTED_ORIGINS: http://localhost:1337
-      SQL_ENGINE: django.db.backends.postgresql
-      SQL_DATABASE: django_chat_db
-      SQL_USER: admin
-      SQL_PASSWORD: password
-      SQL_HOST: db
-      SQL_PORT: 5432
-      REDIS_HOST: "redis"
-      REDIS_PORT: 6379
-      REDIS_PASSWORD: "test"
-      ACS_CONNECTION_STRING: # Add your Azure Communication Services connection string here
-      ACS_SENDER_EMAIL: # Add your Azure Communication Services sender email here
-      USE_S3: "False"
-      AWS_ACCESS_KEY_ID: # Add your AWS access key ID here
-      AWS_SECRET_ACCESS_KEY: # Add your AWS secret access key here
-      AWS_STORAGE_BUCKET_NAME: # Add your AWS storage bucket name here
-    volumes:
-      - websockets_log_data:/usr/src/app/logs
       - static_volume:/home/app/web/staticfiles
     depends_on:
       - db
@@ -145,7 +113,6 @@ services:
 volumes:
   postgres_data:
   web_log_data:
-  websockets_log_data:
   prometheus_data:
   grafana_data:
   static_volume:

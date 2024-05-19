@@ -27,7 +27,10 @@ django-allauth==0.62.1
 django-crispy-forms==2.1
 django-prometheus==2.3.1
 django-storages==1.14.3
+dnspython==2.6.1
+greenlet==3.0.3
 gunicorn==22.0.0
+h11==0.14.0
 hyperlink==21.0.0
 idna==3.7
 incremental==22.10.0
@@ -52,7 +55,6 @@ pyasn1_modules==0.4.0
 pycparser==2.22
 pylint-plugin-utils==0.8.2
 pyOpenSSL==24.1.0
-pytest==8.2.0
 python-dateutil==2.9.0.post0
 redis==5.0.4
 requests==2.31.0
@@ -66,4 +68,5 @@ Twisted==24.3.0
 txaio==23.1.1
 typing_extensions==4.11.0
 urllib3==2.2.1
+uvicorn==0.29.0
 zope.interface==6.3

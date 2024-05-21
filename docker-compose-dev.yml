@@ -79,6 +79,8 @@ services:
       AWS_ACCESS_KEY_ID: # Add your AWS access key ID here
       AWS_SECRET_ACCESS_KEY: # Add your AWS secret access key here
       AWS_STORAGE_BUCKET_NAME: # Add your AWS storage bucket name here
+      GOOGLE_CLIENT_ID: # Add your Google client ID here
+      GOOGLE_CLIENT_SECRET: # Add your Google client secret here
     volumes:
       - web_log_data:/usr/src/app/logs
       - static_volume:/home/app/web/staticfiles

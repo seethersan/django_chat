@@ -40,3 +40,23 @@
 	color: #ffffff;
 	transition: 0.3s;
 }
+
+.card-title {
+    font-family: 'Work Sans', sans-serif;
+    font-size: 1.5rem;
+}
+
+.card-text {
+    font-family: 'Poppins', sans-serif;
+    font-size: 1rem;
+}
+
+.btn-primary {
+    background-color: #1d5a97;
+    border-color: #1d5a97;
+}
+
+.btn-primary:hover {
+    background-color: #9a4ef1;
+    border-color: #9a4ef1;
+}

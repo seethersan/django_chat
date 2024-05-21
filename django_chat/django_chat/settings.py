@@ -38,6 +38,7 @@ SESSION_COOKIE_SECURE = True
 # Application definition
 
 INSTALLED_APPS = [
+    "daphne",
     "allauth",
     "allauth.account",
     "allauth.socialaccount",
@@ -82,6 +83,9 @@ AUTHENTICATION_BACKENDS = [
 LOGIN_REDIRECT_URL = "/chat/"
 ACCOUNT_LOGOUT_REDIRECT_URL = "/accounts/login/"
 ACCOUNT_EMAIL_REQUIRED = True
+AUTH_USER_MODEL = "users.CustomUser"
+ACCOUNT_SIGNUP_FORM_CLASS = "users.forms.CustomUserCreationForm"
+
 SITE_ID = 1
 
 ROOT_URLCONF = "django_chat.urls"
@@ -192,7 +196,7 @@ if USE_S3:
 else:
     STATIC_URL = "/static/"
     STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
-    MEDIA_URL = "/media/"
+    MEDIA_URL = "/mediafiles/"
     MEDIA_ROOT = os.path.join(BASE_DIR, "mediafiles")
 
 STATICFILES_DIRS = [

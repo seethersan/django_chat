@@ -1,10 +1,12 @@
 from unittest.mock import patch
 
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 from django.test import Client, TestCase
 from django.urls import reverse
 
 from .models import ChatRoom
+
+User = get_user_model()
 
 
 class ChatRoomModelTest(TestCase):
@@ -16,6 +18,26 @@ class ChatRoomModelTest(TestCase):
         room = ChatRoom.objects.create(name="New Test Room")
         self.assertEqual(room.name, "New Test Room")
         self.assertTrue(isinstance(room, ChatRoom))
+
+
+class ChatRoomViewsTest(TestCase):
+    def setUp(self):
+        self.user = User.objects.create_user(
+            username="testuser", password="testpassword"
+        )
+        self.client.login(username="testuser", password="testpassword")
+        self.chatroom = ChatRoom.objects.create(name="Test Room")
+
+    def test_index_view(self):
+        response = self.client.get(reverse("index"))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, "chatrooms/list_rooms.html")
+        self.assertContains(response, "Test Room")
+
+    def test_create_room_view_get(self):
+        response = self.client.get(reverse("create_room"))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, "chatrooms/index.html")
 
 
 class RoomViewTest(TestCase):

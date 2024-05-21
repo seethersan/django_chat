@@ -22,9 +22,28 @@ const chatSocket = new WebSocket(
 chatSocket.onmessage = function(e) {
     const data = JSON.parse(e.data);
     const messageElement = document.createElement('div')
-    const userId = data['user_id']
+    const userId = data['user']['id']
     const loggedInUserId = JSON.parse(document.getElementById('user_id').textContent)
-    messageElement.innerText = data.message
+    
+    // Create the avatar image element
+    const avatarElement = document.createElement('img');
+    avatarElement.src = data['user']['avatar'];
+    avatarElement.alt = `${data['user']['username']}'s avatar`;
+    avatarElement.classList.add('avatar');
+
+    // Create the username strong element
+    const usernameElement = document.createElement('strong');
+    usernameElement.innerText = data['user']['username'];
+
+    // Create the message content span
+    const messageContentElement = document.createElement('span');
+    messageContentElement.innerText = `: ${data.message}`;
+
+    // Append the avatar, username, and message content to the message element
+    messageElement.appendChild(avatarElement);
+    messageElement.appendChild(usernameElement);
+    messageElement.appendChild(messageContentElement);
+
     if (userId === loggedInUserId) {
         messageElement.classList.add('message', 'sender')
     } else {
@@ -39,6 +58,7 @@ chatSocket.onmessage = function(e) {
 };
 
 chatSocket.onclose = function(e) {
+    console.log(e)
     console.error('Chat socket closed unexpectedly');
 };
 

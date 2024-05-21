@@ -142,3 +142,4 @@ docker-compose-local.yml
 secrets.yaml
 ingress.yaml
 staticfiles
+mediafiles

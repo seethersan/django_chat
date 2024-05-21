@@ -35,6 +35,29 @@ body {
 	transition: 0.3s;
 }
 
+h2 {
+	font-family: 'Work Sans', sans-serif;
+	font-size: 2rem;
+	margin-bottom: 20px;
+	color: #333;
+}
+
+ul {
+	list-style-type: none;
+	padding: 0;
+}
+
+ul li {
+	margin: 10px 0;
+}
+
+ul li a {
+	text-decoration: none;
+	color: #1d5a97;
+	font-size: 1.2rem;
+	transition: color 0.3s;
+}
+
 .button {
 	background-color: #ffffff;
 	color: #9a4ef1;
@@ -77,6 +100,14 @@ body {
 
 .receiver {
     background-color: #62bd56;
+}
+
+.avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-right: 10px;
+    vertical-align: middle;
 }
 
 .leaveButton {

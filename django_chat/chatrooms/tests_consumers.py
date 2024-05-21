@@ -1,10 +1,12 @@
 from channels.testing import WebsocketCommunicator
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 from django.test import TestCase, override_settings
 from unittest.mock import patch
 
 from chatrooms.consumers import ChatConsumer
 from chatrooms.models import ChatRoom
+
+User = get_user_model()
 
 test_settings = override_settings(
     CHANNEL_LAYERS={
@@ -55,12 +57,32 @@ class ChatConsumerTest(TestCase):
         await communicator.send_json_to({"message": message})
 
         response = await communicator.receive_json_from()
-        self.assertEqual(response, {"message": message, "user_id": self.user.id})
+        self.assertEqual(
+            response,
+            {
+                "message": message,
+                "user": {
+                    "id": self.user.id,
+                    "username": self.user.username,
+                    "avatar": None,
+                },
+            },
+        )
 
         mock_get_chat.assert_called_once_with(self.room_name, [])
         mock_set_chat.assert_called_once_with(
             self.room_name,
-            [{"user": self.user.id, "content": message, "room": self.room_name}],
+            [
+                {
+                    "user": {
+                        "id": self.user.id,
+                        "username": self.user.username,
+                        "avatar": None,
+                    },
+                    "content": message,
+                    "room": self.room_name,
+                }
+            ],
         )
 
         await communicator.disconnect()

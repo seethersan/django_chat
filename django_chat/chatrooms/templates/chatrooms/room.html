@@ -12,13 +12,15 @@
     <div class="container">
         <div id="chat-log">
             {% for chat in chats %}
-                {% if chat.user == request.user.id %}
+                {% if chat.user.id == request.user.id %}
                     <div class="message sender">
-                        {{ chat.content }}
+                        <img src="{{ chat.user.avatar }}" alt="{{ chat.user.username }}'s avatar" class="avatar">
+                        <strong>{{ chat.user.username }}</strong>: {{ chat.content }}
                     </div>
                 {% else %}
                     <div class="message receiver">
-                        {{ chat.content }}
+                        <img src="{{ chat.user.avatar }}" alt="{{ chat.user.username }}'s avatar" class="avatar">
+                        <strong>{{ chat.user.username }}</strong>: {{ chat.content }}
                     </div>
                 {% endif %}
             {% endfor %}

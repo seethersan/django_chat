@@ -12,7 +12,14 @@ logger = logging.getLogger("chatrooms.views")
 
 class Index(LoginRequiredMixin, View):
     def get(self, request):
+        rooms = ChatRoom.objects.all()
         logger.debug(f"Index view accessed by user: {request.user}")
+        return render(request, "chatrooms/list_rooms.html", {"rooms": rooms})
+
+
+class RoomCreate(LoginRequiredMixin, View):
+    def get(self, request):
+        logger.debug(f"RoomCreate view accessed by user: {request.user}")
         return render(request, "chatrooms/index.html")
 
 

@@ -34,40 +34,58 @@ class ChatConsumer(AsyncWebsocketConsumer):
     async def receive(self, text_data):
         text_data_json = json.loads(text_data)
         message = text_data_json["message"]
-        self.user_id = self.scope["user"].id
+        self.user = self.scope["user"]
 
         logger.debug(
-            f"Message received from user {self.user_id} in room {self.room_name}: {message}"
+            f"Message received from user {self.user.id} in room {self.room_name}: {message}"
         )
 
         storage = AsyncChatStorage()
 
         room = await database_sync_to_async(ChatRoom.objects.get)(name=self.room_name)
         chats = await storage.get_chat(room.name, [])
-        chats.append({"user": self.user_id, "content": message, "room": room.name})
+        chats.append(
+            {
+                "user": {
+                    "id": self.user.id,
+                    "username": self.user.username,
+                    "avatar": self.user.avatar.url if self.user.avatar else None,
+                },
+                "content": message,
+                "room": room.name,
+            }
+        )
         await storage.set_chat(room.name, chats)
 
-        logger.debug(f"Message stored for room {self.room_name} by user {self.user_id}")
+        logger.debug(f"Message stored for room {self.room_name} by user {self.user.id}")
 
         await self.channel_layer.group_send(
             self.room_group_name,
-            {"type": "chat_message", "message": message, "user_id": self.user_id},
+            {
+                "type": "chat_message",
+                "message": message,
+                "user": {
+                    "id": self.user.id,
+                    "username": self.user.username,
+                    "avatar": self.user.avatar.url if self.user.avatar else None,
+                },
+            },
         )
 
         logger.debug(
-            f"Message sent to group {self.room_group_name} from user {self.user_id}"
+            f"Message sent to group {self.room_group_name} from user {self.user.id}"
         )
 
     async def chat_message(self, event):
         message = event["message"]
-        user_id = event["user_id"]
+        user = event["user"]
 
         logger.debug(
-            f"Broadcasting message in room {self.room_name} from user {user_id}: {message}"
+            f"Broadcasting message in room {self.room_name} from user {user['id']}: {message}"
         )
 
-        await self.send(text_data=json.dumps({"message": message, "user_id": user_id}))
+        await self.send(text_data=json.dumps({"message": message, "user": user}))
 
         logger.debug(
-            f"Message broadcasted in room {self.room_name} from user {user_id}: {message}"
+            f"Message broadcasted in room {self.room_name} from user {user['id']}: {message}"
         )

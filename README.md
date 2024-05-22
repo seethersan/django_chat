@@ -104,20 +104,20 @@ This command will execute the test suite and display the results.
 ## Example Usage
 To navigate to the chat rooms list, you can use the URL path:
 ```
-http://localhost:8000/chatrooms/
+http://localhost:8000/
 ```
 
 To create a new chat room, you can use the URL path:
 ```
-http://localhost:8000/chatrooms/create/
+http://localhost:8000/create/
 ```
 
 To join a specific chat room (e.g., room1), you can use the URL path:
 ```
-http://localhost:8000/chatrooms/room/room1/
+http://localhost:8000/room1/
 ```
 
 To sign up as a new user, you can use the URL path:
 ```
-http://localhost:8000/users/signup/
+http://localhost:8000/accounts/signup/
 ```

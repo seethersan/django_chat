@@ -34,10 +34,15 @@ class Room(LoginRequiredMixin, View):
             logger.info(f"Existing room found: {room_name}")
             storage = ChatStorage()
             chats = storage.get_chat(room_name, [])
+            if request.user not in room.users.all():
+                room.users.add(request.user)
+                room.save()
             logger.debug(f"Chats retrieved for room: {room_name}, chats: {chats}")
         else:
             logger.info(f"Creating new room: {room_name}")
             room = ChatRoom(name=room_name)
+            room.save()
+            room.users.add(request.user)
             room.save()
             chats = []
 

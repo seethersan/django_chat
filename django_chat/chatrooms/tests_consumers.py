@@ -64,7 +64,7 @@ class ChatConsumerTest(TestCase):
                 "user": {
                     "id": self.user.id,
                     "username": self.user.username,
-                    "avatar": None,
+                    "avatar": "/mediafiles/avatar/default_avatar_profile.jpg",
                 },
             },
         )
@@ -77,7 +77,7 @@ class ChatConsumerTest(TestCase):
                     "user": {
                         "id": self.user.id,
                         "username": self.user.username,
-                        "avatar": None,
+                        "avatar": "/mediafiles/avatar/default_avatar_profile.jpg",
                     },
                     "content": message,
                     "room": self.room_name,

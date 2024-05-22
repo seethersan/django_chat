@@ -9,14 +9,13 @@ class CustomUserCreationForm(UserCreationForm):
 
     class Meta:
         model = get_user_model()
-        fields = ("email", "first_name", "last_name", "username", "avatar")
+        fields = ("email", "first_name", "last_name", "avatar")
 
     def signup(self, request, user):
-        user.email = self.cleaned_data["email"]
-        user.first_name = self.cleaned_data["first_name"]
-        user.last_name = self.cleaned_data["last_name"]
-        user.username = self.cleaned_data["username"]
-        user.avatar = self.cleaned_data["avatar"]
+        user.email = self.cleaned_data.get("email")
+        user.first_name = self.cleaned_data.get("first_name")
+        user.last_name = self.cleaned_data.get("last_name")
+        user.avatar = self.cleaned_data.get("avatar")
         user.save()
 
     def clean_avatar(self):
@@ -42,7 +41,7 @@ class CustomUserCreationForm(UserCreationForm):
             if len(avatar) > (2048 * 1024):
                 raise forms.ValidationError("Avatar file size may not exceed 2MB.")
 
-        except AttributeError:
+        except TypeError:
             """
             Handles case when we are updating the user profile
             and do not supply a new avatar
@@ -82,7 +81,7 @@ class CustomUserChangeForm(UserChangeForm):
             if len(avatar) > (2048 * 1024):
                 raise forms.ValidationError("Avatar file size may not exceed 20k.")
 
-        except AttributeError:
+        except TypeError:
             """
             Handles case when we are updating the user profile
             and do not supply a new avatar
